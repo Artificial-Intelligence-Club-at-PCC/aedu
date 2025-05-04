@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chat UI</title>
+
+  <!-- MathJax -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js" defer></script>
+
+  <!-- Markdown parser -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js" defer></script>
+  <!-- HTML sanitizer -->
+  <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js" defer></script>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="chat-container">
+
+    <!-- 💬 Chat Window -->
+    <div id="chat-window" class="chat-window"></div>
+
+    <!-- ✍️ Input Area -->
+    <div class="input-container">
+      <textarea id="user-input" placeholder="Type your message here..." rows="2"></textarea>
+      <button id="send-btn">Send</button>
+    </div>
+
+    <!-- 📄 PDF Upload UI -->
+    <div class="upload-container">
+      <form id="upload-form">
+        <input type="file" id="pdf-input" accept="application/pdf">
+        <button type="submit" class="upload-btn">Upload PDF</button>
+      </form>
+      <div id="doc-status">📄 No document uploaded</div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
