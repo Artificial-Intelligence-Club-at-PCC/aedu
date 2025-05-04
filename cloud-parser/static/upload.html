@@ -1,0 +1,36 @@
+<!-- static/upload.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload PDF</title>
+</head>
+<body>
+  <h1>Upload a PDF for Parsing</h1>
+  <form id="upload-form" enctype="multipart/form-data">
+    <input type="file" name="pdf" accept="application/pdf" required>
+    <button type="submit">Upload</button>
+  </form>
+  <pre id="result"></pre>
+
+  <script>
+    document.getElementById('upload-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const form = e.target;
+      const file = form.pdf.files[0];
+      const data = new FormData();
+      data.append('pdf', file);
+      try {
+        const res = await fetch('http://localhost:8000/upload', {
+            method: 'POST',
+            body: data
+        });
+        const json = await res.json();
+        document.getElementById('result').innerText = JSON.stringify(json, null, 2);
+      } catch (err) {
+        document.getElementById('result').innerText = 'Error: ' + err;
+      }
+    });
+  </script>
+</body>
+</html>
