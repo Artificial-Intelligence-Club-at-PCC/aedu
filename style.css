@@ -79,8 +79,7 @@ body {
 
 /* Message bubble */
 .message {
-  display: inline-block;
-  max-width: 90%;
+  /* default for user & ai */
   padding: 0.75rem;
   border-radius: 8px;
   line-height: 1.4;
@@ -89,8 +88,20 @@ body {
   overflow-wrap: anywhere;
   background: #ececec;
 }
+
+/* User bubble retains dynamic sizing */
 .message.user {
+  display: inline-block;
+  max-width: 90%;
   background: #dcf8c6;
+}
+
+/* AI bubble spans full width */
+.message.ai {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  background: #ececec; /* grey */
 }
 
 /* Timestamp */

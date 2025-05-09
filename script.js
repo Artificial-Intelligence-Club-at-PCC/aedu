@@ -1,3 +1,53 @@
+// — In‑memory & persisted chat memory —
+let chatMemory = [];
+
+/**
+ * Load saved memory from localStorage into chatMemory.
+ */
+function loadMemory() {
+  try {
+    const stored = localStorage.getItem('chatMemory');
+    const parsed = JSON.parse(stored);
+    chatMemory = Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.warn('⚠️ Failed to parse chatMemory:', e);
+    chatMemory = [];
+  }
+}
+
+
+/**
+ * Persist chatMemory to localStorage.
+ */
+function saveMemory() {
+  localStorage.setItem('chatMemory', JSON.stringify(chatMemory));
+}
+
+/**
+ * Completely reset conversation memory.
+ */
+function resetMemory() {
+  chatMemory = [];
+  localStorage.removeItem('chatMemory');
+  console.log('Chat memory reset.');
+}
+
+// load any existing memory on startup
+loadMemory();
+
+/**
+ * Build a context injection string from chatMemory.
+ */
+function getContextInjection() {
+  let injection = '--- Conversation Context Injection ---\n';
+  for (const msg of chatMemory) {
+    const speaker = msg.role === 'user' ? 'User' : 'Assistant';
+    injection += `${speaker}: "${msg.content}"\n`;
+  }
+  injection += '--- End of Context ---';
+  return injection;
+}
+
 // — Load API key from config.json (unchanged) —
 let API_KEY = null;
 fetch('config.json')
@@ -19,6 +69,9 @@ const uploadForm = document.getElementById('upload-form');
 const pdfInput   = document.getElementById('pdf-input');
 const docStatus  = document.getElementById('doc-status');
 
+/**
+ * Our wrapper now includes a {{CONTEXT}} placeholder
+ */
 const PROMPT_WRAPPER = `
 You are an advanced math assistant.
 
@@ -28,20 +81,22 @@ If the question or your response involves mathematics, always include LaTeX form
 - Use display math with double dollars: $$ ... $$
 - Do not include explanations without formatting key expressions in LaTeX
 - Prefer clean typeset equations instead of plain text math
+
+{{CONTEXT}}
+
+Continue using this context to maintain mathematical precision and rigor...
 `;
 
 /**
- * Append a message bubble with optional timestamp (user)
- * and copy button (AI). Renders Markdown → sanitize → LaTeX.
+ * Append a message bubble, plus record it in chatMemory.
  */
 function appendMessage(text, sender) {
+  // 1) UI
   const wrapper = document.createElement('div');
   wrapper.className = `message-wrapper ${sender}`;
-
   const bubble = document.createElement('div');
   bubble.className = `message ${sender}`;
-  const rawHtml = marked.parse(text);
-  bubble.innerHTML = DOMPurify.sanitize(rawHtml);
+  bubble.innerHTML = DOMPurify.sanitize(marked.parse(text));
   wrapper.appendChild(bubble);
 
   if (sender === 'user') {
@@ -72,20 +127,29 @@ function appendMessage(text, sender) {
   if (window.MathJax?.typesetPromise) {
     MathJax.typesetPromise([bubble]).catch(console.error);
   }
+
+  // 2) Memory
+  if (!Array.isArray(chatMemory)) chatMemory = [];
+  chatMemory.push({ role: sender, content: text });
+  saveMemory();
 }
 
 /**
- * Send user prompt to Gemini Flash via public API
+ * Send user prompt to Gemini Flash via public API,
+ * injecting full convo context each time.
  */
 async function sendMessage() {
   const text = userInput.value.trim();
   if (!text) return;
-
   appendMessage(text, 'user');
   userInput.value = '';
 
-  // If there's an uploaded doc, you can inject context here later
-  const wrappedPrompt = PROMPT_WRAPPER + "\n\nUser: " + text;
+  // inject full context
+  const contextBlock = getContextInjection();
+  const wrappedPrompt = PROMPT_WRAPPER.replace(
+    '{{CONTEXT}}',
+    contextBlock
+  ) + `\n\nUser: ${text}`;
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
   const body = {
@@ -103,7 +167,6 @@ async function sendMessage() {
     const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text
                 || '⚠️ No response.';
     appendMessage(reply, 'ai');
-
   } catch (e) {
     console.error('Fetch error:', e);
     appendMessage('⚠️ Could not fetch AI response.', 'ai');
@@ -122,7 +185,6 @@ uploadForm.addEventListener('submit', async e => {
   }
   const formData = new FormData();
   formData.append('pdf', file);
-
   try {
     const res = await fetch('http://localhost:8000/upload', {
       method: 'POST',
