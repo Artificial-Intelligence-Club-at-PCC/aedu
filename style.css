@@ -1,0 +1,173 @@
+/* Base reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: sans-serif;
+  background: #f5f5f5;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Container */
+.chat-container {
+  width: 95%;
+  max-width: 800px;
+  height: 90vh;
+  background: #fff;
+  border: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 📄 Upload section */
+.upload-container {
+  padding: 0.5rem;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f0f0f0;
+}
+#upload-form {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.upload-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  background: #28a745;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.upload-btn:hover {
+  background: #218838;
+}
+#doc-status {
+  font-size: 0.875rem;
+  color: #333;
+}
+
+/* Chat window */
+.chat-window {
+  flex: 1;
+  padding: 0.5rem;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Message wrapper */
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0.5rem;
+}
+.message-wrapper.user {
+  align-items: flex-end;
+}
+.message-wrapper.ai {
+  align-items: flex-start;
+}
+
+/* Message bubble */
+.message {
+  /* default for user & ai */
+  padding: 0.75rem;
+  border-radius: 8px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  background: #ececec;
+}
+
+/* User bubble retains dynamic sizing */
+.message.user {
+  display: inline-block;
+  max-width: 90%;
+  background: #dcf8c6;
+}
+
+/* AI bubble spans full width */
+.message.ai {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  background: #ececec; /* grey */
+}
+
+/* Timestamp */
+.timestamp {
+  font-size: 0.75rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
+
+/* Copy button */
+.copy-btn {
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+  padding: 2px 6px;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.copy-btn:hover {
+  background: #0056b3;
+}
+
+/* Markdown styling */
+.message pre {
+  background: #f0f0f0;
+  padding: 0.5rem;
+  border-radius: 4px;
+  overflow-x: auto;
+  font-family: monospace;
+}
+.message code {
+  background: #f0f0f0;
+  padding: 2px 4px;
+  border-radius: 4px;
+  font-family: monospace;
+}
+.message h1, .message h2, .message h3 {
+  margin: 0.5rem 0;
+}
+.message ul, .message ol {
+  margin: 0.5rem 0 1rem 1.5rem;
+}
+
+/* Input area */
+.input-container {
+  display: flex;
+  border-top: 1px solid #ddd;
+}
+#user-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  font-size: 1rem;
+  resize: vertical;
+  min-height: 2.5rem;
+  max-height: 200px;
+}
+#send-btn {
+  padding: 0 1rem;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+#send-btn:hover {
+  background: #0056b3;
+}

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // — In‑memory & persisted chat memory —
 let chatMemory = [];
 
@@ -49,8 +48,6 @@ function getContextInjection() {
   return injection;
 }
 
-=======
->>>>>>> afa61a92f63c2d738de6aff378f5141c6402d3ed
 // — Load API key from config.json (unchanged) —
 let API_KEY = null;
 fetch('config.json')
@@ -72,12 +69,9 @@ const uploadForm = document.getElementById('upload-form');
 const pdfInput   = document.getElementById('pdf-input');
 const docStatus  = document.getElementById('doc-status');
 
-<<<<<<< HEAD
 /**
  * Our wrapper now includes a {{CONTEXT}} placeholder
  */
-=======
->>>>>>> afa61a92f63c2d738de6aff378f5141c6402d3ed
 const PROMPT_WRAPPER = `
 You are an advanced math assistant.
 
@@ -87,7 +81,6 @@ If the question or your response involves mathematics, always include LaTeX form
 - Use display math with double dollars: $$ ... $$
 - Do not include explanations without formatting key expressions in LaTeX
 - Prefer clean typeset equations instead of plain text math
-<<<<<<< HEAD
 
 {{CONTEXT}}
 
@@ -104,22 +97,6 @@ function appendMessage(text, sender) {
   const bubble = document.createElement('div');
   bubble.className = `message ${sender}`;
   bubble.innerHTML = DOMPurify.sanitize(marked.parse(text));
-=======
-`;
-
-/**
- * Append a message bubble with optional timestamp (user)
- * and copy button (AI). Renders Markdown → sanitize → LaTeX.
- */
-function appendMessage(text, sender) {
-  const wrapper = document.createElement('div');
-  wrapper.className = `message-wrapper ${sender}`;
-
-  const bubble = document.createElement('div');
-  bubble.className = `message ${sender}`;
-  const rawHtml = marked.parse(text);
-  bubble.innerHTML = DOMPurify.sanitize(rawHtml);
->>>>>>> afa61a92f63c2d738de6aff378f5141c6402d3ed
   wrapper.appendChild(bubble);
 
   if (sender === 'user') {
@@ -150,7 +127,6 @@ function appendMessage(text, sender) {
   if (window.MathJax?.typesetPromise) {
     MathJax.typesetPromise([bubble]).catch(console.error);
   }
-<<<<<<< HEAD
 
   // 2) Memory
   if (!Array.isArray(chatMemory)) chatMemory = [];
@@ -161,17 +137,10 @@ function appendMessage(text, sender) {
 /**
  * Send user prompt to Gemini Flash via public API,
  * injecting full convo context each time.
-=======
-}
-
-/**
- * Send user prompt to Gemini Flash via public API
->>>>>>> afa61a92f63c2d738de6aff378f5141c6402d3ed
  */
 async function sendMessage() {
   const text = userInput.value.trim();
   if (!text) return;
-<<<<<<< HEAD
   appendMessage(text, 'user');
   userInput.value = '';
 
@@ -181,14 +150,6 @@ async function sendMessage() {
     '{{CONTEXT}}',
     contextBlock
   ) + `\n\nUser: ${text}`;
-=======
-
-  appendMessage(text, 'user');
-  userInput.value = '';
-
-  // If there's an uploaded doc, you can inject context here later
-  const wrappedPrompt = PROMPT_WRAPPER + "\n\nUser: " + text;
->>>>>>> afa61a92f63c2d738de6aff378f5141c6402d3ed
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
   const body = {
@@ -206,10 +167,6 @@ async function sendMessage() {
     const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text
                 || '⚠️ No response.';
     appendMessage(reply, 'ai');
-<<<<<<< HEAD
-=======
-
->>>>>>> afa61a92f63c2d738de6aff378f5141c6402d3ed
   } catch (e) {
     console.error('Fetch error:', e);
     appendMessage('⚠️ Could not fetch AI response.', 'ai');
@@ -228,10 +185,6 @@ uploadForm.addEventListener('submit', async e => {
   }
   const formData = new FormData();
   formData.append('pdf', file);
-<<<<<<< HEAD
-=======
-
->>>>>>> afa61a92f63c2d738de6aff378f5141c6402d3ed
   try {
     const res = await fetch('http://localhost:8000/upload', {
       method: 'POST',
