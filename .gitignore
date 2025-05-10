@@ -9,3 +9,5 @@ venv/
 google-cloud-sdk/
 noteapp/
 
+# Ignore any possible API keys
+config.json

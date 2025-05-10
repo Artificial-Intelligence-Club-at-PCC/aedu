@@ -48,6 +48,14 @@ function getContextInjection() {
   return injection;
 }
 
+/**
+ * Escape every single backslash in a LaTeX string
+ * so that "\" → "\\"
+ */
+function escapeBackslashes(str) {
+  return str.replace(/\\/g, '\\\\');
+}
+
 // — Load API key from config.json (unchanged) —
 let API_KEY = null;
 fetch('config.json')
@@ -91,6 +99,9 @@ Continue using this context to maintain mathematical precision and rigor...
  * Append a message bubble, plus record it in chatMemory.
  */
 function appendMessage(text, sender) {
+  // 0) Deal with backslash errors
+  text = escapeBackslashes(text);
+  
   // 1) UI
   const wrapper = document.createElement('div');
   wrapper.className = `message-wrapper ${sender}`;
@@ -220,3 +231,8 @@ _Think of me as the **future of math education and computation** — ready when 
   `;
   appendMessage(welcome, 'ai');
 });
+
+window.addEventListener('beforeunload', () => {
+  localStorage.removeItem('chatMemory');
+});
+
