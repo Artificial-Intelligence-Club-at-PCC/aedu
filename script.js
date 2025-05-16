@@ -52,9 +52,18 @@ function getContextInjection() {
  * Escape every single backslash in a LaTeX string
  * so that "\" → "\\"
  */
-function escapeBackslashes(str) {
-  return str.replace(/\\/g, '\\\\');
+function escapeBackslashes(str) 
+{
+  if (str.includes('$$')) {
+    // Inline LaTeX: escape backslashes with double backslashes
+    return str.replace(/\\/g, '\\\\');
+  } else if (str.includes('$')) {
+    // Centered LaTeX: keep single backslashes
+    return str.replace(/\\/g, '\\');
+  }
+  return str;
 }
+
 
 // — Load API key from config.json (unchanged) —
 let API_KEY = null;
