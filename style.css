@@ -171,3 +171,7 @@ body {
 #send-btn:hover {
   background: #0056b3;
 }
+
+.loading {
+  width: 32px;
+}
