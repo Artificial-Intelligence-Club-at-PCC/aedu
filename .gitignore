@@ -11,3 +11,5 @@ noteapp/
 
 # Ignore any possible API keys
 config.json
+config.json
+cloud-parser/*.json
