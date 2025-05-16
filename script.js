@@ -48,13 +48,6 @@ function getContextInjection() {
   return injection;
 }
 
-/**
- * Escape every single backslash in a LaTeX string
- * so that "\" → "\\"
- */
-function escapeBackslashes(str) {
-  return str.replace(/\\/g, '\\\\');
-}
 
 // — Load API key from config.json (unchanged) —
 let API_KEY = null;
@@ -94,6 +87,15 @@ If the question or your response involves mathematics, always include LaTeX form
 
 Continue using this context to maintain mathematical precision and rigor...
 `;
+
+/**
+ * Escape every single backslash in a LaTeX string
+ * so that "\" → "\\"
+ */
+function escapeBackslashes(str) {
+  return str.replace(/\\/g, '\\\\');
+}
+
 
 /**
  * Append a message bubble, plus record it in chatMemory.
