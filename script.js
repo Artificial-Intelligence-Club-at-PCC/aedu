@@ -172,6 +172,11 @@ async function sendMessage() {
   appendMessage(text, 'user');
   userInput.value = '';
 
+  const loading = document.createElement('img');
+  loading.setAttribute("src", "loading.gif");
+  loading.setAttribute("class", "loading");
+  chatWindow.appendChild(loading);
+
   // inject full context
   const contextBlock = getContextInjection();
   const wrappedPrompt = PROMPT_WRAPPER.replace(
@@ -194,9 +199,11 @@ async function sendMessage() {
     const data = await res.json();
     const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text
                 || '⚠️ No response.';
+    loading.remove();
     appendMessage(reply, 'ai');
   } catch (e) {
     console.error('Fetch error:', e);
+    loading.remove();
     appendMessage('⚠️ Could not fetch AI response.', 'ai');
   }
 }
