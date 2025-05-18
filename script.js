@@ -175,6 +175,9 @@ async function sendMessage() {
   const loading = document.createElement('img');
   loading.setAttribute("src", "loading.gif");
   loading.setAttribute("class", "loading");
+  loading.onload = () => {
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+  };
   chatWindow.appendChild(loading);
 
   // inject full context
@@ -206,6 +209,7 @@ async function sendMessage() {
     loading.remove();
     appendMessage('⚠️ Could not fetch AI response.', 'ai');
   }
+  chatWindow.scrollTop = chatWindow.scrollHeight;
 }
 
 /**
