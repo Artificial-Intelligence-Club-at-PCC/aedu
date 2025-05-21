@@ -104,15 +104,6 @@ Continue using this context to maintain mathematical precision and rigor...
 `;
 
 /**
- * Escape every single backslash in a LaTeX string
- * so that "\" → "\\"
- */
-function escapeBackslashes(str) {
-  return str.replace(/\\/g, '\\\\');
-}
-
-
-/**
  * Append a message bubble, plus record it in chatMemory.
  */
 function appendMessage(text, sender) {
