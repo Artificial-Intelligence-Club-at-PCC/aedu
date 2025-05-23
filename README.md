@@ -36,4 +36,5 @@ Aedu delivers a clean, embeddable chat interface tailored for educational conten
 ## Team Credits
 
 **Project Manager**: Timothy De Lange
+
 **Team members**: Shin Aung, Isaac Cheng, Juan Valdez, Akki Akshit, Jeremy Lin
