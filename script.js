@@ -54,15 +54,20 @@ function getContextInjection() {
  */
 function escapeBackslashes(str) 
 {
-  if (str.includes('$$')) {
-    // Inline LaTeX: escape backslashes with double backslashes
-    return str.replace(/\\/g, '\\\\');
-  } else if (str.includes('$')) {
-    // Centered LaTeX: keep single backslashes
-    return str.replace(/\\/g, '\\');
-  }
+
+  // 1) Double‐escape inside display math ($$ … $$)
+  str = str.replace(/\$\$(.+?)\$\$/gs, (match, inner) => {
+    return `$$${inner.replace(/\\/g, '\\\\')}$$`;
+  });
+  
+  // 2) Escape (or preserve) inside inline math ($ … $)
+  str = str.replace(/\$(?!\$)(.+?)(?<!\$)\$/gs, (match, inner) => {
+    return `$${inner}$`;
+  });
+
   return str;
 }
+
 
 // — Load API key from config.json (unchanged) —
 let API_KEY = null;
@@ -107,15 +112,20 @@ Continue using this context to maintain mathematical precision and rigor...
  * Append a message bubble, plus record it in chatMemory.
  */
 function appendMessage(text, sender) {
-  // 0) Deal with backslash errors
-  text = escapeBackslashes(text);
+  // --- Save RAW text for context injection & memory ---
+  const rawText = text;
+  chatMemory.push({ role: sender, content: rawText });
+  saveMemory();
   
-  // 1) UI
+  // --- Process text for display ---
+  const displayText = escapeBackslashes(rawText);
+  
+  // UI
   const wrapper = document.createElement('div');
   wrapper.className = `message-wrapper ${sender}`;
   const bubble = document.createElement('div');
   bubble.className = `message ${sender}`;
-  bubble.innerHTML = DOMPurify.sanitize(marked.parse(text));
+  bubble.innerHTML = DOMPurify.sanitize(marked.parse(displayText));
   wrapper.appendChild(bubble);
 
   if (sender === 'user') {
