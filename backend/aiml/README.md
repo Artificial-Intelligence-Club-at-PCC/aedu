@@ -9,4 +9,8 @@ In the back-end, we implemented and tested a multiagent orchestration for a comp
 - MCP
 - FAISS
 
-## AI/ML Solutions Architecture Designed by - Evan Chou
+---
+
+## Team Credits
+
+**AI Solutions Architecture Design and Implementation**: Evan Chou
